@@ -46,15 +46,26 @@
       font-size: 24px;
       outline: none;
     }
+    .btn-grid{
+      display: block;
+      width: 100px;
+      height: 30px;
+      line-height: 30px;
+      text-align: center;
+      border: 1px solid #333;
+      border-radius: 30px;
+      margin: 50px auto;
+    }
     </style>
   </head>
   <body>
-    <div id="grid"></div>  
+    <div id="grid"></div>
+    <a class="btn-grid" href="javascript:;">grid</a>
     <script type="text/template" id="tpl">  
-      <% for(var i=1;i<10;i++){ %>
+      <% for(var i=0;i<9;i++){ %>
         <div class="sudoku">
-        <% for(var j=1;j<10;j++){ %>
-          <div class="square"><input class="square-input" data-value= <%= i+','+j %> /> </div>
+        <% for(var j=0;j<9;j++){ %>
+          <div class="square"><input class="square-input" <%= (obj && grid[i][j]) ? "disabled" : "" %> value=<%= (obj && grid[i][j]) ? grid[i][j] : ' "" ' %> data-value= <%= i+','+j %>   /> </div>
         <% } %>
         </div>
       <% } %>
@@ -66,14 +77,47 @@
     <script src="underscore.js"></script>
     <script type="text/javascript">
     var tpl = _.template($('#tpl').html());
-    $('#grid').html(tpl())
-    // var html = '';
-    // for(var i=1;i<10;i++){
-    //   for(var j=1;j<10;j++){
-    //     html += tpl({data:i+','+j})
-    //   }
-    // }
-    // $('#grid').html(html)
+    var gridData = {"grid":[
+      [0,1,2,3,4,5,6,7,8],
+      [0,1,2,3,4,5,6,7,8],
+      [0,1,2,3,4,5,6,7,8],
+      [0,1,2,3,4,5,6,7,8],
+      [0,1,2,3,4,5,6,7,8],
+      [0,1,2,3,4,5,6,7,8],
+      [0,1,2,3,4,5,6,7,8],
+      [0,1,2,3,4,5,6,7,8],
+      [0,1,2,3,4,5,6,7,8]
+    ]};
+    var gridData = {
+      "grid" : [[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0]]
+    }
+    $('#grid').html(tpl(gridData))
+    
+    $('.btn-grid').bind('click',function(){
+      getGridData();
+    })
+    function getGridData(){
+      var gridData = [];
+      var sudoku = $('.sudoku');
+      var square = $('.square');
+      sudoku.each(function(){
+        var that = $(this);
+        var square = that.find('.square-input');
+        var sudokuData = [];
+        square.each(function(){
+          var that = $(this);
+          var thatVal = that.val();
+          if(thatVal){
+            sudokuData.push(parseInt(thatVal));
+          }else{
+            sudokuData.push(0);
+          }
+        })
+        gridData.push(sudokuData);
+      })
+      
+      console.log(JSON.stringify(gridData));
+    }
     </script>
   </body>
 </html>
